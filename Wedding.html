@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joel Fogels Wedding Countdown</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-image: url("artificial-white-flower-packet-blue-background.jpg");
+        background-size: cover;
+        background-position: center;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .loading {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        border-top-color: #1E90FF;
+        animation: spin 0.5s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        display: none;
+      }
+      .countdown {
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        padding: 50px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 10px;
+        align-items: center;
+        justify-items: center;
+        color: white;
+        width: 900px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: 300;
+      }
+      .date-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin: 20px;
+        color: white;
+      }
+
+      .date-container h1 {
+        font-size: 45px;
+        font-weight: 400;
+      }
+
+      .date-container h4 {
+        font-size: 25px;
+        font-weight: 400;
+      }
+      .date-container h1,
+      .date-container h4 {
+        margin: 0;
+        -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.7);
+      }
+
+      .countdown .count-days {
+        font-size: 150px;
+        line-height: 150px;
+        grid-column: span 3;
+      }
+      .countdown .count {
+        font-size: 120px;
+        line-height: 120px;
+      }
+
+      .countdown .label-days {
+        grid-column: span 3;
+        font-size: 60px;
+        line-height: 60px;
+        margin-bottom: 50px;
+      }
+      .countdown .label {
+        font-size: 50px;
+        line-height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader">
+      <!-- <img src="loader.gif" alt="Loading..." /> -->
+      <div class="loading"></div>
+    </div>
+    <div class="container">
+      <div class="countdown">
+        <div id="days" class="count-days"></div>
+        <div class="label-days">days</div>
+        <div id="hours" class="count">00</div>
+        <div id="minutes" class="count">00</div>
+        <div id="seconds" class="count">00</div>
+        <div class="label">hours</div>
+        <div class="label">minutes</div>
+        <div class="label">seconds</div>
+      </div>
+      <div class="date-container">
+        <h1>Joel Fogels Wedding</h1>
+        <h4>Sunday, November 19, 2023 6:00 PM</h4>
+      </div>
+    </div>
+
+    <script>
+      // Loader
+      const loader = document.querySelector(".loader");
+      const container = document.querySelector(".container");
+      loader.style.display = "flex";
+      container.style.display = "none";
+
+      // Set the date we're counting down to
+      const weddingDate = new Date("2023-11-19T18:00:00").getTime();
+
+      // Update the countdown every second
+      const countdown = setInterval(function () {
+        const now = new Date().getTime();
+        const distance = weddingDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display the countdown
+        document.getElementById("days").innerHTML = days;
+        document.getElementById("hours").innerHTML = hours
+          .toString()
+          .padStart(2, "0");
+        document.getElementById("minutes").innerHTML = minutes
+          .toString()
+          .padStart(2, "0");
+        document.getElementById("seconds").innerHTML = seconds
+          .toString()
+          .padStart(2, "0");
+
+        // If the countdown is over, display a message
+        if (distance < 0) {
+          clearInterval(countdown);
+          document.getElementById("countdown").innerHTML =
+            "<p>The wedding has begun!</p>";
+        }
+
+        // Show the countdown container and hide the loader
+        container.style.display = "block";
+        loader.style.display = "none";
+      }, 1000);
+    </script>
+  </body>
+</html>
