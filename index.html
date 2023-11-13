@@ -8,11 +8,59 @@
       body {
         margin: 0;
         padding: 0;
-        background-image: url("artificial-white-flower-packet-blue-background.jpg");
-        background-size: cover;
+        background-image: url("happy-wedding.jpg");
         background-position: center;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden; /* Hide overflow to prevent scroll bars during confetti explosion */
       }
+
+      .confetti-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #f00; /* Confetti color */
+        border-radius: 50%;
+        animation: confettiAnimation 2s ease-out infinite;
+        transform-origin: 50% 50%;
+      }
+
+      @keyframes confettiAnimation {
+        to {
+          transform: translateY(100vh) rotate(720deg);
+        }
+      }
+
+      .moving-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        animation: popIn 1s ease-out;
+        z-index: 1000;
+      }
+
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        80% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
       .loader {
         position: fixed;
         top: 0;
@@ -31,7 +79,7 @@
         height: 100px;
         border-radius: 50%;
         border: 5px solid #fff;
-        border-top-color: #1E90FF;
+        border-top-color: #1e90ff;
         animation: spin 0.5s ease-in-out infinite;
       }
 
@@ -40,6 +88,7 @@
           transform: rotate(360deg);
         }
       }
+
       .container {
         display: flex;
         flex-direction: column;
@@ -47,10 +96,23 @@
         justify-content: center;
         height: 100vh;
         display: none;
+        z-index: 1000;
       }
+
       .countdown {
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 10px;
+        background: linear-gradient(
+          45deg,
+          #ff2400,
+          #e81d1d,
+          #e8b71d,
+          #e3e81d,
+          #1de840,
+          #1ddde8,
+          #2b1de8,
+          #dd00f3,
+          #dd00f3
+        );
+        border-radius: 50px;
         padding: 50px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         text-align: center;
@@ -67,25 +129,48 @@
         transform: translate(-50%, -50%);
         font-weight: 300;
       }
+
       .date-container {
-        position: absolute;
-        bottom: 0;
-        left: 0;
         margin: 20px;
         color: white;
+        background: linear-gradient(
+          45deg,
+          #ff2400,
+          #e81d1d,
+          #e8b71d,
+          #e3e81d,
+          #1de840,
+          #1ddde8,
+          #2b1de8,
+          #dd00f3,
+          #dd00f3
+        );
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 50px;
       }
 
       .date-container h1 {
         font-size: 45px;
-        font-weight: 400;
+      }
+
+      .date-container h3 {
+        font-size: 35px;
       }
 
       .date-container h4 {
         font-size: 25px;
-        font-weight: 400;
+      }
+
+      .date-container h5 {
+        font-size: 20px;
       }
       .date-container h1,
-      .date-container h4 {
+      .date-container h4,
+      .date-container h3,
+      .date-container h5 {
         margin: 0;
         -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.7);
       }
@@ -113,8 +198,18 @@
     </style>
   </head>
   <body>
+    <div class="confetti-container"></div>
+
+    <div class="moving-container">
+      <div class="date-container">
+        <h1>Joel Fogels Wedding</h1>
+        <h4>Sunday, November 19, 2023 6:00 PM</h4>
+        <h3>Kerem Menachem</h3>
+        <h5>5411 Fort Hamilton Pkwy, Brooklyn, NY 11219</h5>
+      </div>
+    </div>
+
     <div class="loader">
-      <!-- <img src="loader.gif" alt="Loading..." /> -->
       <div class="loading"></div>
     </div>
     <div class="container">
@@ -128,57 +223,74 @@
         <div class="label">minutes</div>
         <div class="label">seconds</div>
       </div>
-      <div class="date-container">
-        <h1>Joel Fogels Wedding</h1>
-        <h4>Sunday, November 19, 2023 6:00 PM</h4>
-      </div>
     </div>
 
     <script>
-      // Loader
-      const loader = document.querySelector(".loader");
-      const container = document.querySelector(".container");
-      loader.style.display = "flex";
-      container.style.display = "none";
+      // Loader and confetti
+      document.addEventListener("DOMContentLoaded", function () {
+        const loader = document.querySelector(".loader")
+        const confettiContainer = document.querySelector(".confetti-container")
+
+        // Show confetti
+        generateConfetti()
+        // Hide loader after a short delay
+        setTimeout(function () {
+          loader.style.display = "none"
+          // Show the countdown container
+          const container = document.querySelector(".container")
+          container.style.display = "block"
+        }, 2000) // Adjust the delay as needed
+      })
+
+      function generateConfetti() {
+        const confettiContainer = document.querySelector(".confetti-container")
+        const numConfetti = 100
+
+        for (let i = 0; i < numConfetti; i++) {
+          const confetti = document.createElement("div")
+          confetti.className = "confetti"
+          confetti.style.left = `${Math.random() * 100}vw`
+          confetti.style.animationDuration = `${Math.random() * 2 + 1}s`
+          confetti.style.animationDelay = `${Math.random()}s`
+
+          confettiContainer.appendChild(confetti)
+        }
+      }
 
       // Set the date we're counting down to
-      const weddingDate = new Date("2023-11-19T18:00:00").getTime();
+      const weddingDate = new Date("2023-11-19T18:00:00").getTime()
 
       // Update the countdown every second
       const countdown = setInterval(function () {
-        const now = new Date().getTime();
-        const distance = weddingDate - now;
+        const now = new Date().getTime()
+        const distance = weddingDate - now
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
         const hours = Math.floor(
           (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        )
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
 
         // Display the countdown
-        document.getElementById("days").innerHTML = days;
+        document.getElementById("days").innerHTML = days
         document.getElementById("hours").innerHTML = hours
           .toString()
-          .padStart(2, "0");
+          .padStart(2, "0")
         document.getElementById("minutes").innerHTML = minutes
           .toString()
-          .padStart(2, "0");
+          .padStart(2, "0")
         document.getElementById("seconds").innerHTML = seconds
           .toString()
-          .padStart(2, "0");
+          .padStart(2, "0")
 
         // If the countdown is over, display a message
         if (distance < 0) {
-          clearInterval(countdown);
+          clearInterval(countdown)
           document.getElementById("countdown").innerHTML =
-            "<p>The wedding has begun!</p>";
+            "<p>The wedding has begun!</p>"
         }
-
-        // Show the countdown container and hide the loader
-        container.style.display = "block";
-        loader.style.display = "none";
-      }, 1000);
+      }, 1000)
     </script>
   </body>
 </html>
